@@ -1,0 +1,105 @@
+---
+format:
+  html:
+    title: "Pagina Dinamica Quarto"
+    embed-resources: true        
+---
+
+
+<script src="https://cdn.plot.ly/plotly-3.0.1.min.js"></script>
+
+
+```{python}
+
+import pandas as pd
+
+df = pd.DataFrame({
+    'A': [1, 2, 1, 4, 5],
+    'B': [10, 20, 0, 4, 50],
+    'C': [100, 200, 3000, 400, 100]
+})
+
+```
+
+```{python}
+import json
+data_js1 = json.dumps(df.to_dict(orient="list"))
+data_js1
+
+```
+
+
+```{python}
+
+
+def creates_html_plotly(
+    
+    df_fn:pd.DataFrame,
+    id_dropdown:str = 'DD-Unique1',
+    id_chart:str = 'Chart-Unique1',
+    name_fn_plt:str = 'Plotly_PlotCat1',
+    type_chart:str = 'bar' ,
+    data_js1:str = 'data' 
+):
+    """
+        This function must be printed to a quarto chunk with options: 
+        #| output: asis. 
+        Make sure to always use a unique id_chart. Otherwise the script tag will not be able to find it.
+    """   
+
+    data_js = json.dumps(df_fn.to_dict(orient="list"))
+
+    header_html = \
+f"""                 
+<h2>Select a Category</h2>
+ 
+<label for="{id_dropdown}">Select Column for Dropdown:</label>
+<select id="{id_dropdown}">
+<option value="A">A</option>
+<option value="B">B</option>
+<option value="C">C</option>
+</select>
+
+<div id="{id_chart}"></div>
+"""
+
+    data_string = f""" 
+<script>
+// Sample data
+const {data_js1} = {
+    data_js};
+        """
+
+    remainingString = f"""             
+function {name_fn_plt}(category) {{
+    Plotly.newPlot("{id_chart}", [{{
+        x: [1, 2, 3, 4],
+        y: {data_js1}[category],
+        type: '{type_chart}',
+        name: category
+    }}], {{
+        title: `Category ${{category}}`,
+        yaxis: {{ title: 'Value' }},
+        xaxis: {{ title: 'Index' }}
+    }});
+}}
+
+// Initial draw
+{name_fn_plt}('A');
+
+// Update chart on dropdown change
+document.getElementById('{id_dropdown}').addEventListener('change', function() {{
+    {name_fn_plt}(this.value);
+}});
+</script>
+"""
+    
+    return header_html + data_string + remainingString
+
+```
+
+
+```{python}
+#| output: asis
+print(creates_html_plotly(df))
+```

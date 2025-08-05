@@ -1,0 +1,33 @@
+---
+format:
+  html:
+    title: "Pagina Basica Quarto"
+    embed-resources: true        
+---
+
+# Esto es Header 
+
+## Esto es un Sub-Header
+
+<h1> Esto es un H1 Header </h1>
+
+<h2> Esto es un Sub Header html </h2>
+
+
+```{python}
+
+for _ in range(5):
+    print(_)
+
+```
+
+
+```{python}
+#| output: asis 
+
+print("# Hola un texto")
+print("mas texto")
+
+print("<h2> otro texto ejemplo </h2>")
+
+```

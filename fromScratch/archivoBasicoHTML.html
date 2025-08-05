@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
+</head>
+<body>
+    
+<h2>Select a Category</h2>
+<select id="categoryDropdown">
+  <option value="A">A</option>
+  <option value="B">B</option>
+  <option value="C">C</option>
+</select>
+
+<div id="plotly-chart"></div>
+
+<script>
+  // Sample data
+  const data = {
+    A: [10, 20, 15, 25],
+    B: [5, 15, 10, 30],
+    C: [8, 18, 12, 28]
+  };
+
+  // Initial plot
+  function plotCategory(category) {
+    Plotly.newPlot('plotly-chart', [{
+      x: [1, 2, 3, 4],
+      y: data[category],
+      type: 'bar',
+      name: category
+    }], {
+      title: `Category ${category}`,
+      yaxis: {title: 'Value'},
+      xaxis: {title: 'Index'}
+    });
+  }
+
+  // Initial draw
+  plotCategory('A');
+
+  // Update chart on dropdown change
+  document.getElementById('categoryDropdown').addEventListener('change', function() {
+    plotCategory(this.value);
+  });
+</script>
+    
+</body>
+</html>
